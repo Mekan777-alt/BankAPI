@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"bank/models"
+	"bank/internal/domain"
 	"database/sql"
 	"encoding/json"
 	"io/ioutil"
@@ -31,12 +31,12 @@ func (h Handler) CreateBill(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 
-	var users models.Account
+	var users domain.Account
 	err = json.NewDecoder(strings.NewReader(string(body))).Decode(&users)
 	query := "SELECT * FROM accounts WHERE email = $1"
 	row := h.DB.QueryRow(query, users.Email)
 
-	var dbUser models.Account
+	var dbUser domain.Account
 	err = row.Scan(&dbUser.ID, &dbUser.FirstName, &dbUser.SecondName, &dbUser.Email, &dbUser.Password)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -52,7 +52,7 @@ func (h Handler) CreateBill(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	} else {
-		var bill = models.Bill{
+		var bill = domain.Bill{
 			ID:           dbUser.ID,
 			Number:       randomNumberBill(),
 			Limit:        0,

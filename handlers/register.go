@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"bank/models"
+	"bank/internal/domain"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -16,7 +16,7 @@ func (h Handler) Registration(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	var account models.Account
+	var account domain.Account
 	err = json.Unmarshal(body, &account)
 	if err != nil {
 		log.Println(err)

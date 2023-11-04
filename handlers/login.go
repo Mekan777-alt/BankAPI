@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"bank/models"
+	"bank/internal/domain"
 	"database/sql"
 	"encoding/json"
 	"io/ioutil"
@@ -17,12 +17,12 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	var JsonResponse models.Account
+	var JsonResponse domain.Account
 	err = json.Unmarshal(body, &JsonResponse)
 	if err != nil {
 		log.Fatal(err)
 	}
-	var acount models.Account
+	var acount domain.Account
 	query := "SELECT email, password FROM accounts WHERE email = $1"
 	row := h.DB.QueryRow(query, JsonResponse.Email)
 	err = row.Scan(&acount.Email, &acount.Password)

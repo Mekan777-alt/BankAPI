@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"bank/models"
+	"bank/internal/domain"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -29,7 +29,7 @@ func (h Handler) CreateCard(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 
-	var JsonResponse models.Bill
+	var JsonResponse domain.Bill
 	err = json.NewDecoder(strings.NewReader(string(body))).Decode(&JsonResponse)
 	if err != nil {
 		log.Println(err)
@@ -37,7 +37,7 @@ func (h Handler) CreateCard(w http.ResponseWriter, r *http.Request) {
 	queryBillId := "SELECT id FROM bills WHERE number = $1"
 	bill_id := h.DB.QueryRow(queryBillId, JsonResponse.Number)
 
-	card := models.Card{
+	card := domain.Card{
 		Number:         randomNumber(16),
 		Cvv:            randomNumber(3),
 		ExpirationDate: time.Now().AddDate(5, 0, 0),
